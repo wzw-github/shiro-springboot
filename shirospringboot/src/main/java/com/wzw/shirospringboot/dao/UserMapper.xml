@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzw.shirospringboot.dao.UserMapper">
+    <resultMap type="User" id="UserResult">
+        <result property="id" column="id"/>
+        <result property="userName" column="userName"/>
+        <result property="password" column="password"/>
+    </resultMap>
+    <!--根据用户名查询该角色是否存在-->
+    <select id="getByUserName" parameterType="String" resultMap="UserResult">
+        select * from t_user where userName=#{userName}
+    </select>
+
+    <!--根据用户名获取该用户拥有的角色-->
+    <select id="getRoles" parameterType="String" resultType="String">
+        SELECT r.roleName FROM t_user u
+        INNER JOIN t_role r ON u.roleId=r.id
+        WHERE u.userName=#{userName}
+    </select>
+    <!--根据用户名查询该角色拥有的权限-->
+    <select id="getPermissions" parameterType="String" resultType="String">
+        SELECT p.permissionName FROM t_user u
+        INNER JOIN t_role r ON u.roleId=r.id
+        INNER JOIN t_permission p ON p.roleId=r.id
+        WHERE u.userName=#{userName}
+    </select>
+</mapper>
